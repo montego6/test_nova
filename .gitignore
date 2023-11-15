@@ -1,5 +1,4 @@
 *.json
-*.txt
 *.log
 *.pot
 *.pyc

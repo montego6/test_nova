@@ -16,8 +16,11 @@ SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 
 class CreateFileInDriveAPIView(APIView):
     def post(self, request):
-        name = request.data["name"]
-        content = request.data["data"]
+        name = request.data.get("name")
+        content = request.data.get("data")
+
+        if not name or not content:
+            return Response({'details': "name and data should be provided"})
 
         creds = None
         # The file token.json stores the user's access and refresh tokens, and is

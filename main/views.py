@@ -1,4 +1,3 @@
-
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -12,13 +11,13 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
 
-SCOPES = ['https://www.googleapis.com/auth/drive.file']
+SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 
 
 class CreateFileInDriveAPIView(APIView):
     def post(self, request):
-        name = request.data['name']
-        content = request.data['data']
+        name = request.data["name"]
+        content = request.data["data"]
 
         creds = None
         # The file token.json stores the user's access and refresh tokens, and is
@@ -40,17 +39,17 @@ class CreateFileInDriveAPIView(APIView):
                 token.write(creds.to_json())
 
         file_metadata = {
-                'name': name + '.txt',
-                "parents": 'root',
-                "mimeType": "application/vnd.google-apps.file'",
-            }
-        
-        with open(name + '.txt', 'w') as file:
+            "name": name + ".txt",
+            "parents": "root",
+            "mimeType": "application/vnd.google-apps.file'",
+        }
+
+        with open(name + ".txt", "w") as file:
             file.write(content)
-        
-        media = MediaFileUpload(name + '.txt', mimetype='text/plain', resumable=True)
+
+        media = MediaFileUpload(name + ".txt", mimetype="text/plain", resumable=True)
 
         service = build("drive", "v3", credentials=creds)
         file = service.files().create(body=file_metadata, media_body=media).execute()
 
-        return Response({'result': file.get('id')}, status=status.HTTP_200_OK)
+        return Response({"result": file.get("id")}, status=status.HTTP_200_OK)
